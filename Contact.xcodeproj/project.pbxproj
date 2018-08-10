@@ -229,7 +229,7 @@
 		9027E6F721194CB000564469 /* Contact */ = {
 			isa = PBXGroup;
 			children = (
-				9027E73F211954D700564469 /* Nimbus */,
+				907E567F211DADCB0060C4F5 /* Nimbus */,
 				9027E73B2119541A00564469 /* GUI */,
 				9027E73A2119540600564469 /* Utils */,
 				9027E736211953BF00564469 /* BLL */,
@@ -289,33 +289,23 @@
 		9027E73B2119541A00564469 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
-				90D07FA9211D3BEA0069F258 /* ZATableViewCell.h */,
-				90D07FA8211D3BE90069F258 /* ZATableViewCell.m */,
-				90D07F9C211A93D70069F258 /* ZACollectionViewCell.h */,
-				90D07F9D211A93D70069F258 /* ZACollectionViewCell.m */,
-				9027E72A21194CDF00564469 /* NimbusContactViewController.h */,
-				9027E72B21194CDF00564469 /* NimbusContactViewController.m */,
-				90D07FA2211A9EC40069F258 /* ContactViewController.h */,
-				90D07FA3211A9EC40069F258 /* ContactViewController.m */,
-				90D07FA5211D33350069F258 /* ViewController.h */,
-				90D07FA6211D33350069F258 /* ViewController.m */,
-				90D07FAB211D4A680069F258 /* ZABaseViewController.h */,
-				90D07FAC211D4A680069F258 /* ZABaseViewController.m */,
+				907E5683211DAEAB0060C4F5 /* View */,
+				907E5684211DAEBC0060C4F5 /* Controller */,
 			);
 			path = GUI;
 			sourceTree = "<group>";
 		};
-		9027E73F211954D700564469 /* Nimbus */ = {
+		907E567F211DADCB0060C4F5 /* Nimbus */ = {
 			isa = PBXGroup;
 			children = (
-				9027E750211954FD00564469 /* Core */,
-				9027E7512119550400564469 /* Table */,
-				9027E740211954ED00564469 /* Collection */,
+				907E5682211DADEC0060C4F5 /* Core */,
+				907E5681211DADE30060C4F5 /* TableView */,
+				907E5680211DADD70060C4F5 /* CollectionView */,
 			);
-			name = Nimbus;
+			path = Nimbus;
 			sourceTree = "<group>";
 		};
-		9027E740211954ED00564469 /* Collection */ = {
+		907E5680211DADD70060C4F5 /* CollectionView */ = {
 			isa = PBXGroup;
 			children = (
 				9027E748211954F700564469 /* NICollectionViewActions.h */,
@@ -330,10 +320,39 @@
 				9027E741211954F600564469 /* NIMutableCollectionViewModel.m */,
 				9027E747211954F700564469 /* NIMutableCollectionViewModel+Private.h */,
 			);
-			name = Collection;
+			path = CollectionView;
 			sourceTree = "<group>";
 		};
-		9027E750211954FD00564469 /* Core */ = {
+		907E5681211DADE30060C4F5 /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				9027E7A32119552400564469 /* NICellBackgrounds.h */,
+				9027E79E2119552400564469 /* NICellBackgrounds.m */,
+				9027E79B2119552400564469 /* NICellCatalog.h */,
+				9027E7A12119552400564469 /* NICellCatalog.m */,
+				9027E79F2119552400564469 /* NICellFactory.h */,
+				9027E79C2119552400564469 /* NICellFactory.m */,
+				9027E7A42119552400564469 /* NICellFactory+Private.h */,
+				9027E7A52119552500564469 /* NIFormCellCatalog.h */,
+				9027E7A62119552500564469 /* NIFormCellCatalog.m */,
+				9027E7952119552300564469 /* NimbusModels.h */,
+				9027E7A22119552400564469 /* NIMutableTableViewModel.h */,
+				9027E79D2119552400564469 /* NIMutableTableViewModel.m */,
+				9027E79A2119552300564469 /* NIMutableTableViewModel+Private.h */,
+				9027E7962119552300564469 /* NIRadioGroup.h */,
+				9027E7932119552300564469 /* NIRadioGroup.m */,
+				9027E7942119552300564469 /* NIRadioGroupController.h */,
+				9027E7A02119552400564469 /* NIRadioGroupController.m */,
+				9027E7992119552300564469 /* NITableViewActions.h */,
+				9027E7982119552300564469 /* NITableViewActions.m */,
+				9027E7A72119552500564469 /* NITableViewModel.h */,
+				9027E7972119552300564469 /* NITableViewModel.m */,
+				9027E7A82119552500564469 /* NITableViewModel+Private.h */,
+			);
+			path = TableView;
+			sourceTree = "<group>";
+		};
+		907E5682211DADEC0060C4F5 /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				9027E7532119551000564469 /* NIActions.h */,
@@ -382,36 +401,33 @@
 				9027E77A2119551200564469 /* UIResponder+NimbusCore.h */,
 				9027E7732119551200564469 /* UIResponder+NimbusCore.m */,
 			);
-			name = Core;
+			path = Core;
 			sourceTree = "<group>";
 		};
-		9027E7512119550400564469 /* Table */ = {
+		907E5683211DAEAB0060C4F5 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				9027E7A32119552400564469 /* NICellBackgrounds.h */,
-				9027E79E2119552400564469 /* NICellBackgrounds.m */,
-				9027E79B2119552400564469 /* NICellCatalog.h */,
-				9027E7A12119552400564469 /* NICellCatalog.m */,
-				9027E79F2119552400564469 /* NICellFactory.h */,
-				9027E79C2119552400564469 /* NICellFactory.m */,
-				9027E7A42119552400564469 /* NICellFactory+Private.h */,
-				9027E7A52119552500564469 /* NIFormCellCatalog.h */,
-				9027E7A62119552500564469 /* NIFormCellCatalog.m */,
-				9027E7952119552300564469 /* NimbusModels.h */,
-				9027E7A22119552400564469 /* NIMutableTableViewModel.h */,
-				9027E79D2119552400564469 /* NIMutableTableViewModel.m */,
-				9027E79A2119552300564469 /* NIMutableTableViewModel+Private.h */,
-				9027E7962119552300564469 /* NIRadioGroup.h */,
-				9027E7932119552300564469 /* NIRadioGroup.m */,
-				9027E7942119552300564469 /* NIRadioGroupController.h */,
-				9027E7A02119552400564469 /* NIRadioGroupController.m */,
-				9027E7992119552300564469 /* NITableViewActions.h */,
-				9027E7982119552300564469 /* NITableViewActions.m */,
-				9027E7A72119552500564469 /* NITableViewModel.h */,
-				9027E7972119552300564469 /* NITableViewModel.m */,
-				9027E7A82119552500564469 /* NITableViewModel+Private.h */,
+				90D07FA9211D3BEA0069F258 /* ZATableViewCell.h */,
+				90D07FA8211D3BE90069F258 /* ZATableViewCell.m */,
+				90D07F9C211A93D70069F258 /* ZACollectionViewCell.h */,
+				90D07F9D211A93D70069F258 /* ZACollectionViewCell.m */,
 			);
-			name = Table;
+			path = View;
+			sourceTree = "<group>";
+		};
+		907E5684211DAEBC0060C4F5 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				90D07FA5211D33350069F258 /* ViewController.h */,
+				90D07FA6211D33350069F258 /* ViewController.m */,
+				90D07FAB211D4A680069F258 /* ZABaseViewController.h */,
+				90D07FAC211D4A680069F258 /* ZABaseViewController.m */,
+				90D07FA2211A9EC40069F258 /* ContactViewController.h */,
+				90D07FA3211A9EC40069F258 /* ContactViewController.m */,
+				9027E72A21194CDF00564469 /* NimbusContactViewController.h */,
+				9027E72B21194CDF00564469 /* NimbusContactViewController.m */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
