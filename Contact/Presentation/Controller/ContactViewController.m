@@ -10,7 +10,7 @@
 #import "ZATableViewCell.h"
 #import "ZACollectionViewCell.h"
 #import "ContactPicker.h"
-#import "Contact.h"
+#import "ContactEntity.h"
 
 @interface ContactViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate>
 
@@ -43,7 +43,7 @@
                 NSMutableArray *contactList = [[NSMutableArray alloc] init];
                 for (NSString *key in self.allCategories) {
                     NSArray *listContact = [contacts objectForKey:key];
-                    for (Contact *contact in listContact) {
+                    for (ContactEntity *contact in listContact) {
                         [contactList addObject:contact];
                     }
                 }
@@ -106,7 +106,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ZATableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"tableViewCell"];
-    Contact *contact = [self contactAtIndexPath: indexPath];
+    ContactEntity *contact = [self contactAtIndexPath: indexPath];
     [cell.title setText: [NSString stringWithFormat: @"%@ %@", contact.firstName, contact.lastName]];
     [cell.avatar setText: [contact.contactList objectForKey: @"avatar"]];
     [cell setAvatarColorWithTitle: cell.avatar.text];
@@ -120,7 +120,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    Contact *contact = [self contactAtIndexPath:indexPath];
+    ContactEntity *contact = [self contactAtIndexPath:indexPath];
     if (contact.checked) { // Uncheck
         ZATableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         [cell.tickBox setImage: [UIImage imageNamed:@"ic-none"]];
@@ -171,7 +171,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ZACollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"collectionViewCell" forIndexPath:indexPath];
-    Contact *contact = [_selectedItems objectAtIndex: indexPath.row];
+    ContactEntity *contact = [_selectedItems objectAtIndex: indexPath.row];
     [cell.avatar setText: [contact.contactList objectForKey:@"avatar"]];
     [cell setAvatarColorWithTitle: cell.avatar.text];
     return cell;
@@ -182,7 +182,7 @@
     [self.searchBar setText:@""];
     [self.searchBar endEditing:YES];
     [self.tableView reloadData];
-    Contact *contact = [_selectedItems objectAtIndex:indexPath.row];
+    ContactEntity *contact = [_selectedItems objectAtIndex:indexPath.row];
     NSIndexPath *index = [self indexPathForSelectedContact:contact];
     [self.tableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 }
@@ -223,7 +223,7 @@
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.firstName contains[c] %@ OR SELF.lastName contains[c] %@", searchText, searchText];
         _searchedContactList = [_contactList filteredArrayUsingPredicate:predicate];
         NSLog(@"%lu: ", (unsigned long)[_searchedContactList count]);
-        for (Contact *contact in _searchedContactList) {
+        for (ContactEntity *contact in _searchedContactList) {
             NSLog(@"%@ %@", contact.firstName, contact.lastName);
         }
         [self.tableView reloadData];
@@ -235,7 +235,7 @@
 
 - (void)cancelSelection {
 
-    for (Contact *contact in self.selectedItems) {
+    for (ContactEntity *contact in self.selectedItems) {
         [contact setChecked:NO];
     }
     [self.selectedItems removeAllObjects];
@@ -253,7 +253,7 @@
 
 // Utils
 
-- (Contact *)contactAtIndexPath:(NSIndexPath *)indexPath {
+- (ContactEntity *)contactAtIndexPath:(NSIndexPath *)indexPath {
     if (!_isSearching) {
         NSString *key = [self.allCategories objectAtIndex: indexPath.section];
         NSArray *contacts = [_contactSection objectForKey: key];
@@ -263,7 +263,7 @@
     }
 }
 
-- (NSIndexPath *)indexPathForSelectedContact:(Contact *)contact {
+- (NSIndexPath *)indexPathForSelectedContact:(ContactEntity *)contact {
     NSInteger section, row;
     if (!_isSearching) {
         NSString *key;

@@ -1,5 +1,5 @@
 //
-//  ZATableViewCell2.h
+//  ZACollectionViewCell.h
 //  Contact
 //
 //  Created by Hiên on 8/8/18.
@@ -7,14 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NICellFactory.h"
-#import "Contact.h"
+#import "NICollectionViewCellFactory.h"
+#import "ContactEntity.h"
 
-@interface ZATableViewCell : UITableViewCell <NICell>
+@interface ZACollectionViewCell : UICollectionViewCell <NICollectionViewCell>
 
-@property (nonatomic) UILabel *title;
 @property (nonatomic) UILabel *avatar;
-@property (nonatomic) UIImageView *tickBox;
 
 - (void)setAvatarColorWithTitle:(NSString *)title;
 

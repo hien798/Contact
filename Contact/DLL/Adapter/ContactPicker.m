@@ -80,7 +80,7 @@
                         for (CNLabeledValue *phone in contact.phoneNumbers) {
                             [phones addObject: [phone.value stringValue]];
                         }
-                        Contact *newContact = [[Contact alloc] initWithFirstName:contact.givenName middleName:contact.middleName lastName:contact.familyName phones: phones];
+                        ContactEntity *newContact = [[ContactEntity alloc] initWithFirstName:contact.givenName middleName:contact.middleName lastName:contact.familyName phones: phones];
                         
                         NSMutableArray *emails = [[NSMutableArray alloc] init];
                         for (CNLabeledValue *email in contact.emailAddresses) {
@@ -118,7 +118,7 @@
                             [phones addObject: [phone.value stringValue]];
                         }
                         
-                        Contact *newContact = [[Contact alloc] initWithFirstName:contact.givenName middleName:contact.middleName lastName:contact.familyName phones:phones];
+                        ContactEntity *newContact = [[ContactEntity alloc] initWithFirstName:contact.givenName middleName:contact.middleName lastName:contact.familyName phones:phones];
                         
                         NSMutableArray *emails = [[NSMutableArray alloc] init];
                         for (CNLabeledValue *email in contact.emailAddresses) {

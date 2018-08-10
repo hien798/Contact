@@ -84,7 +84,7 @@
 
 - (BOOL)shouldUpdateCellWithObject:(id)object {
     NICellObject *cellObject = object;
-    Contact *contact = cellObject.userInfo;
+    ContactEntity *contact = cellObject.userInfo;
     [self.title setText:[NSString stringWithFormat:@"%@ %@", contact.firstName, contact.lastName]];
     [self.avatar setText:[contact.contactList objectForKey:@"avatar"]];
     [self setAvatarColorWithTitle:self.avatar.text];

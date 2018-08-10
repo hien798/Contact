@@ -50,7 +50,7 @@
 - (BOOL)shouldUpdateCellWithObject:(id)object {
     NSLog(@"Collection View Update");
     NICollectionViewCellObject *cellObject = object;
-    Contact *contact = cellObject.userInfo;
+    ContactEntity *contact = cellObject.userInfo;
     [self.avatar setText:[contact.contactList objectForKey:@"avatar"]];
     [self setAvatarColorWithTitle:self.avatar.text];
     return YES;

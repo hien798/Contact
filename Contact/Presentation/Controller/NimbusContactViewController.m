@@ -9,7 +9,7 @@
 #import "NimbusContactViewController.h"
 #import "ContactPicker.h"
 #import "NITableViewModel.h"
-#import "Contact.h"
+#import "ContactEntity.h"
 #import "ZATableViewCell.h"
 #import "ZACollectionViewCell.h"
 #import "NICollectionViewModel.h"
@@ -47,7 +47,7 @@
                 for (NSString *key in self.allCategories) {
                     [contactSectionArray addObject:key];
                     NSArray *listContact = [contacts objectForKey:key];
-                    for (Contact *contact in listContact) {
+                    for (ContactEntity *contact in listContact) {
                         NICellObject *object = [[NICellObject alloc] initWithCellClass:[ZATableViewCell class] userInfo:contact];                        
                         [contactSectionArray addObject:object];
                         [contactListArray addObject:object];
@@ -129,7 +129,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NICellObject *object = [self.tableViewModel objectAtIndexPath:indexPath];
-    Contact *contact = object.userInfo;
+    ContactEntity *contact = object.userInfo;
     if (contact.checked) {
         [contact setChecked:!contact.checked];
         ZATableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -220,7 +220,7 @@
 - (void)cancelSelection {
     
     for (NICollectionViewCellObject *object in self.selectedItems) {
-        Contact *contact = object.userInfo;
+        ContactEntity *contact = object.userInfo;
         [contact setChecked:NO];
     }
     [self.selectedItems removeAllObjects];
@@ -236,7 +236,7 @@
 
 // Utils
 
-- (NSUInteger)indexInSelectedItemsOfContact:(Contact *)contact {
+- (NSUInteger)indexInSelectedItemsOfContact:(ContactEntity *)contact {
     for (NSInteger i=0; i<[self.selectedItems count]; i++) {
         NICollectionViewCellObject *object = [self.selectedItems objectAtIndex:i];
         if (contact == object.userInfo) {
@@ -246,7 +246,7 @@
     return -1;
 }
 
-- (NSIndexPath *)indexInContacSectionArrayOfContact:(Contact *)contact {
+- (NSIndexPath *)indexInContacSectionArrayOfContact:(ContactEntity *)contact {
     for (NSInteger section=0; section<[self.tableView numberOfSections]; section++) {
         for (NSInteger row=0; row<[self.tableView numberOfRowsInSection:section]; row++) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];

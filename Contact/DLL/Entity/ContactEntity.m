@@ -6,9 +6,9 @@
 //  Copyright © 2018 Hiên. All rights reserved.
 //
 
-#import "Contact.h"
+#import "ContactEntity.h"
 
-@implementation Contact
+@implementation ContactEntity
 
 
 - (id)init {

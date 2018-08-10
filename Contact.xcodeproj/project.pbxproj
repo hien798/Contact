@@ -13,7 +13,7 @@
 		9027E71221194CB100564469 /* ContactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9027E71121194CB100564469 /* ContactTests.m */; };
 		9027E71D21194CB100564469 /* ContactUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9027E71C21194CB100564469 /* ContactUITests.m */; };
 		9027E72C21194CDF00564469 /* NimbusContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9027E72B21194CDF00564469 /* NimbusContactViewController.m */; };
-		9027E7302119533900564469 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 9027E72F2119533900564469 /* Contact.m */; };
+		9027E7302119533900564469 /* ContactEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 9027E72F2119533900564469 /* ContactEntity.m */; };
 		9027E739211953D600564469 /* ContactPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 9027E738211953D600564469 /* ContactPicker.m */; };
 		9027E74C211954F700564469 /* NIMutableCollectionViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9027E741211954F600564469 /* NIMutableCollectionViewModel.m */; };
 		9027E74D211954F700564469 /* NICollectionViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9027E744211954F700564469 /* NICollectionViewModel.m */; };
@@ -87,8 +87,8 @@
 		9027E71E21194CB100564469 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9027E72A21194CDF00564469 /* NimbusContactViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NimbusContactViewController.h; sourceTree = "<group>"; };
 		9027E72B21194CDF00564469 /* NimbusContactViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NimbusContactViewController.m; sourceTree = "<group>"; };
-		9027E72E2119533900564469 /* Contact.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
-		9027E72F2119533900564469 /* Contact.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
+		9027E72E2119533900564469 /* ContactEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactEntity.h; sourceTree = "<group>"; };
+		9027E72F2119533900564469 /* ContactEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactEntity.m; sourceTree = "<group>"; };
 		9027E737211953D600564469 /* ContactPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactPicker.h; sourceTree = "<group>"; };
 		9027E738211953D600564469 /* ContactPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactPicker.m; sourceTree = "<group>"; };
 		9027E741211954F600564469 /* NIMutableCollectionViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NIMutableCollectionViewModel.m; sourceTree = "<group>"; };
@@ -230,10 +230,9 @@
 			isa = PBXGroup;
 			children = (
 				907E567F211DADCB0060C4F5 /* Nimbus */,
-				9027E73B2119541A00564469 /* GUI */,
-				9027E73A2119540600564469 /* Utils */,
-				9027E736211953BF00564469 /* BLL */,
-				9027E72D2119531F00564469 /* DAL */,
+				9027E73B2119541A00564469 /* Presentation */,
+				9027E73A2119540600564469 /* DLL */,
+				9027E736211953BF00564469 /* BIZ */,
 				9027E6F821194CB000564469 /* AppDelegate.h */,
 				9027E6F921194CB000564469 /* AppDelegate.m */,
 				9027E70121194CB100564469 /* Assets.xcassets */,
@@ -261,38 +260,47 @@
 			path = ContactUITests;
 			sourceTree = "<group>";
 		};
-		9027E72D2119531F00564469 /* DAL */ = {
+		9027E72D2119531F00564469 /* Entity */ = {
 			isa = PBXGroup;
 			children = (
-				9027E72E2119533900564469 /* Contact.h */,
-				9027E72F2119533900564469 /* Contact.m */,
+				9027E72E2119533900564469 /* ContactEntity.h */,
+				9027E72F2119533900564469 /* ContactEntity.m */,
 			);
-			path = DAL;
+			path = Entity;
 			sourceTree = "<group>";
 		};
-		9027E736211953BF00564469 /* BLL */ = {
-			isa = PBXGroup;
-			children = (
-				9027E737211953D600564469 /* ContactPicker.h */,
-				9027E738211953D600564469 /* ContactPicker.m */,
-			);
-			path = BLL;
-			sourceTree = "<group>";
-		};
-		9027E73A2119540600564469 /* Utils */ = {
+		9027E736211953BF00564469 /* BIZ */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Utils;
+			path = BIZ;
 			sourceTree = "<group>";
 		};
-		9027E73B2119541A00564469 /* GUI */ = {
+		9027E73A2119540600564469 /* DLL */ = {
+			isa = PBXGroup;
+			children = (
+				907592C5211DBBE900343008 /* Adapter */,
+				9027E72D2119531F00564469 /* Entity */,
+			);
+			path = DLL;
+			sourceTree = "<group>";
+		};
+		9027E73B2119541A00564469 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
 				907E5683211DAEAB0060C4F5 /* View */,
 				907E5684211DAEBC0060C4F5 /* Controller */,
 			);
-			path = GUI;
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		907592C5211DBBE900343008 /* Adapter */ = {
+			isa = PBXGroup;
+			children = (
+				9027E737211953D600564469 /* ContactPicker.h */,
+				9027E738211953D600564469 /* ContactPicker.m */,
+			);
+			path = Adapter;
 			sourceTree = "<group>";
 		};
 		907E567F211DADCB0060C4F5 /* Nimbus */ = {
@@ -565,7 +573,7 @@
 				9027E78A2119551300564469 /* NIError.m in Sources */,
 				90D07FA4211A9EC40069F258 /* ContactViewController.m in Sources */,
 				9027E7872119551300564469 /* NIActions.m in Sources */,
-				9027E7302119533900564469 /* Contact.m in Sources */,
+				9027E7302119533900564469 /* ContactEntity.m in Sources */,
 				9027E7AB2119552500564469 /* NITableViewActions.m in Sources */,
 				9027E7892119551300564469 /* NIState.m in Sources */,
 				9027E7AF2119552500564469 /* NIRadioGroupController.m in Sources */,

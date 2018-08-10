@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <Contacts/Contacts.h>
 #import <ContactsUI/ContactsUI.h>
-#import "Contact.h"
+#import "ContactEntity.h"
 
 @interface ContactPicker : NSObject
 
