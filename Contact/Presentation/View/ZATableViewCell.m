@@ -7,6 +7,7 @@
 //
 
 #import "ZATableViewCell.h"
+#import "ContactPicker.h"
 
 @implementation ZATableViewCell
 
@@ -37,13 +38,18 @@
     [_avatar.layer setMasksToBounds:YES];
 }
 
+- (void)initThumbnail {
+    _thumbnail = [[UIImageView alloc] init];    
+    [_thumbnail.layer setCornerRadius: 0.5*50]; // table row height = 70;
+    [_thumbnail.layer setMasksToBounds:YES];
+}
+
 - (void)initTickBox {
     _tickBox = [[UIImageView alloc] init];
-    [_tickBox setContentMode: UIViewContentModeScaleAspectFill];
-    [_tickBox setClipsToBounds: YES];
-//    [_tickBox setBackgroundColor: [UIColor lightGrayColor]];
-    [_tickBox.layer setCornerRadius: 0.5*30];
-    [_tickBox.layer setMasksToBounds: YES];
+    [_tickBox setContentMode:UIViewContentModeScaleAspectFill];
+    [_tickBox setClipsToBounds:YES];
+    [_tickBox.layer setCornerRadius:0.5*30];
+    [_tickBox.layer setMasksToBounds:YES];
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -52,16 +58,21 @@
     [self initTitle];
     [self initAvatar];
     [self initTickBox];
-    [self.contentView addSubview: _tickBox];
-    [self.contentView addSubview: _title];
-    [self.contentView addSubview: _avatar];
+    [self initThumbnail];
+    [self.contentView addSubview:_tickBox];
+    [self.contentView addSubview:_title];
+    [self.contentView addSubview:_avatar];
+    [self.contentView addSubview:_thumbnail];
     
-//    [_tickBox setImage: [UIImage imageNamed: @"ic-none"]];
-    [_tickBox setFrame: CGRectMake(10, 20, 30, 30)];
-    [_avatar setFrame: CGRectMake(_tickBox.frame.origin.x + _tickBox.frame.size.width + 10, 10, 50, 50)];
-    [_title setFrame: CGRectMake(_avatar.frame.origin.x + _avatar.frame.size.width + 10, _avatar.frame.origin.y, self.bounds.size.width - _avatar.frame.origin.x + _avatar.frame.size.width + 10, _avatar.frame.size.height)];
-    
+    [_tickBox setFrame:CGRectMake(10, 20, 30, 30)];
+    [_avatar setFrame:CGRectMake(_tickBox.frame.origin.x + _tickBox.frame.size.width + 10, 10, 50, 50)];
+    [_title setFrame:CGRectMake(_avatar.frame.origin.x + _avatar.frame.size.width + 10, _avatar.frame.origin.y, self.bounds.size.width - _avatar.frame.origin.x + _avatar.frame.size.width + 10, _avatar.frame.size.height)];
+    [_thumbnail setFrame:_avatar.frame];
     return self;
+}
+
+- (void)setThumbnailWithImage:(UIImage *)image {
+    [_thumbnail setImage:image];
 }
 
 - (void)setAvatarColorWithTitle:(NSString *)title {
@@ -88,6 +99,13 @@
     [self.title setText:[NSString stringWithFormat:@"%@ %@", contact.firstName, contact.lastName]];
     [self.avatar setText:[contact.contactList objectForKey:@"avatar"]];
     [self setAvatarColorWithTitle:self.avatar.text];
+    if (contact.isAvailableImage) {
+        [[ContactPicker sharedInstance] getThumbnailImageWithIdentifier:contact.identifier completion:^(UIImage *thumbnailImage, NSError *error) {
+            [self setThumbnailWithImage:thumbnailImage];
+        }];
+    } else {
+        [self setThumbnailWithImage:nil];
+    }
     if (contact.checked) {
         [self.tickBox setImage:[UIImage imageNamed:@"ic-tick"]];
     } else {

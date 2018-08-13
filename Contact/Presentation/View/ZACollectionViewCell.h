@@ -13,7 +13,9 @@
 @interface ZACollectionViewCell : UICollectionViewCell <NICollectionViewCell>
 
 @property (nonatomic) UILabel *avatar;
+@property (nonatomic) UIImageView *thumbnail;
 
 - (void)setAvatarColorWithTitle:(NSString *)title;
+- (void)setThumbnailWithImage:(UIImage *)image;
 
 @end

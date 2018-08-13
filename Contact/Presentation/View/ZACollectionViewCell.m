@@ -7,6 +7,7 @@
 //
 
 #import "ZACollectionViewCell.h"
+#import "ContactPicker.h"
 
 @implementation ZACollectionViewCell
 
@@ -23,10 +24,23 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     [self initAvatar];
+    [self initThumbnail];
     [self.contentView addSubview: _avatar];
+    [self.contentView addSubview:_thumbnail];
     [_avatar setFrame: CGRectMake(10, 0, 50, 50)]; // cell frame height = 70
+    [_thumbnail setFrame:_avatar.frame];
     [self setBackgroundColor: [UIColor clearColor]];
     return self;
+}
+
+- (void)initThumbnail {
+    _thumbnail = [[UIImageView alloc] init];
+    [_thumbnail.layer setCornerRadius: 0.5*50]; // table row height = 70;
+    [_thumbnail.layer setMasksToBounds:YES];
+}
+
+- (void)setThumbnailWithImage:(UIImage *)image {
+    [_thumbnail setImage:image];
 }
 
 - (void)setAvatarColorWithTitle:(NSString *)title {
@@ -53,6 +67,13 @@
     ContactEntity *contact = cellObject.userInfo;
     [self.avatar setText:[contact.contactList objectForKey:@"avatar"]];
     [self setAvatarColorWithTitle:self.avatar.text];
+    if (contact.isAvailableImage) {
+        [[ContactPicker sharedInstance] getThumbnailImageWithIdentifier:contact.identifier completion:^(UIImage *thumbnailImage, NSError *error) {
+            [self setThumbnailWithImage:thumbnailImage];
+        }];
+    } else {
+        [self setThumbnailWithImage:nil];
+    }
     return YES;
 }
 

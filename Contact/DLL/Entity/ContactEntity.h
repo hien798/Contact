@@ -10,14 +10,16 @@
 
 @interface ContactEntity : NSObject
 
+@property (nonatomic) NSString *identifier;
 @property (nonatomic) NSString *firstName;
 @property (nonatomic) NSString *middleName;
 @property (nonatomic) NSString *lastName;
+@property (nonatomic) BOOL isAvailableImage;
 @property (nonatomic) BOOL checked;
 
 @property (nonatomic) NSMutableDictionary *contactList;
 
 - (id)init;
-- (id)initWithFirstName:(NSString*)firstName middleName:(NSString*)middleName lastName:(NSString*)lastName phones:(NSArray*)phones;
+- (id)initWithIdentifier:(NSString *)identifier firstName:(NSString *)firstName middleName:(NSString *)middleName lastName:(NSString *)lastName phones:(NSArray *)phones isAvailableImage:(BOOL)isAvailableImage;
 
 @end

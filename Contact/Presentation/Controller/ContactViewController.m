@@ -31,26 +31,21 @@
     [self initData];
     [self constraintData];
     
-    ContactPicker *contactPicker = [ContactPicker sharedInstance];
-    [contactPicker getAllContactsWithSection:^(BOOL granted, NSDictionary *contacts, NSError * _Nullable error) {
-        if (granted) {
-            if (error) {
-                NSLog(@"Error: %@", error.description);
-            } else {
-                self.contactSection = contacts;
-                self.allCategories = [[contacts allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-                [self.tableView reloadData];
-                NSMutableArray *contactList = [[NSMutableArray alloc] init];
-                for (NSString *key in self.allCategories) {
-                    NSArray *listContact = [contacts objectForKey:key];
-                    for (ContactEntity *contact in listContact) {
-                        [contactList addObject:contact];
-                    }
-                }
-                self.contactList = contactList;
-            }
+    [[ContactPicker sharedInstance] getAllContactsWithSection:^(NSDictionary *contacts, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Error: %@", error.description);
         } else {
-            NSLog(@"No Permission");
+            self.contactSection = contacts;
+            self.allCategories = [[contacts allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+            [self.tableView reloadData];
+            NSMutableArray *contactList = [[NSMutableArray alloc] init];
+            for (NSString *key in self.allCategories) {
+                NSArray *listContact = [contacts objectForKey:key];
+                for (ContactEntity *contact in listContact) {
+                    [contactList addObject:contact];
+                }
+            }
+            self.contactList = contactList;
         }
     }];
 }
@@ -110,6 +105,13 @@
     [cell.title setText: [NSString stringWithFormat: @"%@ %@", contact.firstName, contact.lastName]];
     [cell.avatar setText: [contact.contactList objectForKey: @"avatar"]];
     [cell setAvatarColorWithTitle: cell.avatar.text];
+    if (contact.isAvailableImage) {
+        [[ContactPicker sharedInstance] getThumbnailImageWithIdentifier:contact.identifier completion:^(UIImage *thumbnailImage, NSError *error) {
+            [cell setThumbnailWithImage:thumbnailImage];
+        }];
+    } else {
+        [cell setThumbnailWithImage:nil];
+    }
     if (contact.checked) {
         [cell.tickBox setImage: [UIImage imageNamed:@"ic-tick"]];
     } else {
@@ -174,6 +176,13 @@
     ContactEntity *contact = [_selectedItems objectAtIndex: indexPath.row];
     [cell.avatar setText: [contact.contactList objectForKey:@"avatar"]];
     [cell setAvatarColorWithTitle: cell.avatar.text];
+    if (contact.isAvailableImage) {
+        [[ContactPicker sharedInstance] getThumbnailImageWithIdentifier:contact.identifier completion:^(UIImage *thumbnailImage, NSError *error) {
+            [cell setThumbnailWithImage:thumbnailImage];
+        }];
+    } else {
+        [cell setThumbnailWithImage:nil];
+    }
     return cell;
 }
 

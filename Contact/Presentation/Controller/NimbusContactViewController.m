@@ -35,30 +35,25 @@
     [self initData];
     [self constraintData];
     
-    ContactPicker *contactPicker = [ContactPicker sharedInstance];
-    [contactPicker getAllContactsWithSection:^(BOOL granted, NSDictionary *contacts, NSError * _Nullable error) {
-        if (granted) {
-            if (error) {
-                NSLog(@"Error: %@", error.description);
-            } else {
-                self.allCategories = [[contacts allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-                NSMutableArray *contactSectionArray = [[NSMutableArray alloc] init];
-                NSMutableArray *contactListArray = [[NSMutableArray alloc] init];
-                for (NSString *key in self.allCategories) {
-                    [contactSectionArray addObject:key];
-                    NSArray *listContact = [contacts objectForKey:key];
-                    for (ContactEntity *contact in listContact) {
-                        NICellObject *object = [[NICellObject alloc] initWithCellClass:[ZATableViewCell class] userInfo:contact];                        
-                        [contactSectionArray addObject:object];
-                        [contactListArray addObject:object];
-                    }
-                }
-                self.contactSectionArray = contactSectionArray;
-                self.contactListArray = contactListArray;
-                [self buildTableViewModelWithSectionArray:contactSectionArray];
-            }
+    [[ContactPicker sharedInstance] getAllContactsWithSection:^(NSDictionary *contacts, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Error: %@", error.description);
         } else {
-            NSLog(@"No Permission");
+            self.allCategories = [[contacts allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+            NSMutableArray *contactSectionArray = [[NSMutableArray alloc] init];
+            NSMutableArray *contactListArray = [[NSMutableArray alloc] init];
+            for (NSString *key in self.allCategories) {
+                [contactSectionArray addObject:key];
+                NSArray *listContact = [contacts objectForKey:key];
+                for (ContactEntity *contact in listContact) {
+                    NICellObject *object = [[NICellObject alloc] initWithCellClass:[ZATableViewCell class] userInfo:contact];
+                    [contactSectionArray addObject:object];
+                    [contactListArray addObject:object];
+                }
+            }
+            self.contactSectionArray = contactSectionArray;
+            self.contactListArray = contactListArray;
+            [self buildTableViewModelWithSectionArray:contactSectionArray];
         }
     }];
 }

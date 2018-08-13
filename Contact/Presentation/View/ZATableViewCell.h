@@ -14,8 +14,10 @@
 
 @property (nonatomic) UILabel *title;
 @property (nonatomic) UILabel *avatar;
+@property (nonatomic) UIImageView *thumbnail;
 @property (nonatomic) UIImageView *tickBox;
 
 - (void)setAvatarColorWithTitle:(NSString *)title;
+- (void)setThumbnailWithImage:(UIImage *)image;
 
 @end

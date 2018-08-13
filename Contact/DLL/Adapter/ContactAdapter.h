@@ -11,14 +11,14 @@
 #import <ContactsUI/ContactsUI.h>
 #import "ContactEntity.h"
 
-@interface ContactPicker : NSObject
+@interface ContactAdapter : NSObject
+
+@property (nonatomic) CNContactStore *store;
 
 + (instancetype)sharedInstance;
 
 - (void)fetchAllContactsHandler:(void(^)(BOOL granted, NSArray *contacts, NSError * _Nullable error))completion;
 
-- (void)getAllContacts:(void(^)(BOOL granted, NSArray *contacts, NSError * _Nullable error))completion;
-
-- (void)getAllContactsWithSection:(void(^)(BOOL granted, NSDictionary *contacts, NSError * _Nullable error))completion;
+- (void)getThumbnailImageDataWithIdentifier:(NSString *)identifier completion:(void (^)(NSData *thumbnailData, NSError * error))completion;
 
 @end

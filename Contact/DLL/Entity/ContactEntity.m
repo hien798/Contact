@@ -23,10 +23,12 @@
     return self;
 }
 
-- (id)initWithFirstName:(NSString*)firstName middleName:(NSString*)middleName lastName:(NSString*)lastName phones:(NSArray*)phones {
+- (id)initWithIdentifier:(NSString *)identifier firstName:(NSString *)firstName middleName:(NSString *)middleName lastName:(NSString *)lastName phones:(NSArray *)phones isAvailableImage:(BOOL)isAvailableImage {
+    [self setIdentifier:identifier];
     [self setFirstName:firstName];
     [self setMiddleName:@""];
     [self setLastName:lastName];
+    [self setIsAvailableImage:isAvailableImage];
     [self setChecked:NO];
     NSMutableDictionary *contactList = [[NSMutableDictionary alloc] initWithObjectsAndKeys: phones, @"phones", nil];
     [self setContactList:contactList];
