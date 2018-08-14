@@ -16,31 +16,25 @@
     // Initialization code
 }
 
-//- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-//    [super setSelected:selected animated:animated];
-//
-//    // Configure the view for the selected state
-//}
-
 - (void)initTitle {
     _title = [[UILabel alloc] init];
-    [_title setFont: [UIFont systemFontOfSize: 18.0]];
+    [_title setFont:[UIFont systemFontOfSize:18.0]];
 }
 
 - (void)initAvatar {
     _avatar = [[UILabel alloc] init];
-    [_avatar setBackgroundColor: [UIColor grayColor]];
-    [_avatar setTextAlignment: NSTextAlignmentCenter];
-    [_avatar setTextColor: [UIColor whiteColor]];
-    [_avatar setFont: [UIFont systemFontOfSize: 20.0]];
+    [_avatar setBackgroundColor:[UIColor grayColor]];
+    [_avatar setTextAlignment:NSTextAlignmentCenter];
+    [_avatar setTextColor:[UIColor whiteColor]];
+    [_avatar setFont:[UIFont systemFontOfSize:20.0]];
     
-    [_avatar.layer setCornerRadius: 0.5*50]; // table row height = 70;
+    [_avatar.layer setCornerRadius:0.5*50]; // table row height = 70;
     [_avatar.layer setMasksToBounds:YES];
 }
 
 - (void)initThumbnail {
-    _thumbnail = [[UIImageView alloc] init];    
-    [_thumbnail.layer setCornerRadius: 0.5*50]; // table row height = 70;
+    _thumbnail = [[UIImageView alloc] init];
+    [_thumbnail.layer setCornerRadius:0.5*50]; // table row height = 70;
     [_thumbnail.layer setMasksToBounds:YES];
 }
 

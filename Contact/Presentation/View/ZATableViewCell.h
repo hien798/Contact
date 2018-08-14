@@ -17,6 +17,12 @@
 @property (nonatomic) UIImageView *thumbnail;
 @property (nonatomic) UIImageView *tickBox;
 
+/**
+ * Generate a color base on 
+ *
+ *
+ */
+
 - (void)setAvatarColorWithTitle:(NSString *)title;
 - (void)setThumbnailWithImage:(UIImage *)image;
 

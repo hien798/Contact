@@ -14,7 +14,7 @@
     static ContactAdapter *instance = nil;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        instance = [[self alloc] init];        
+        instance = [[self alloc] init];
         instance.store = [[CNContactStore alloc] init];
     });
     return instance;
@@ -28,21 +28,20 @@
         case CNAuthorizationStatusAuthorized:
         {
             completion(YES, nil);
-        }
             break;
-            
+        }
         case CNAuthorizationStatusDenied:
         {
             NSError* error = [NSError errorWithDomain:@"vng.contact" code:CNAuthorizationStatusDenied userInfo:@{@"message": @"Contact access denied, please open preferences and allow application access contact"}];
             completion(NO, error);
-        }
             break;
+        }
         case CNAuthorizationStatusRestricted:
         {
             NSError* error = [NSError errorWithDomain:@"vng.contact" code:CNAuthorizationStatusDenied userInfo:@{@"message": @"Restricted access to contact"}];
             completion(NO, error);
-        }
             break;
+        }
         case CNAuthorizationStatusNotDetermined:
         {
             [self.store requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError * _Nullable error) {
@@ -52,9 +51,9 @@
                     NSError* error = [NSError errorWithDomain:@"vng.contact" code:CNAuthorizationStatusDenied userInfo:@{@"message": @"No permission to access contact"}];
                     completion(NO, error);
                 }
-            }];
-        }
+            }];        
             break;
+        }
         default:
             completion(NO, nil);
             break;
@@ -62,6 +61,7 @@
 }
 
 - (void)fetchAllContactsHandler:(void(^)(BOOL granted, NSArray *contacts, NSError * _Nullable error))completion {
+    
     [self requestPermission:^(BOOL granted, NSError * _Nullable error) {
         if (granted) {
             NSMutableArray *contacts = [[NSMutableArray alloc] init];
@@ -77,9 +77,14 @@
                 {
                     NSMutableArray *phones = [[NSMutableArray alloc] init];
                     for (CNLabeledValue *phone in contact.phoneNumbers) {
-                        [phones addObject: [phone.value stringValue]];
+                        [phones addObject:[phone.value stringValue]];
                     }
-                    ContactEntity *newContact = [[ContactEntity alloc] initWithIdentifier:contact.identifier firstName:contact.givenName middleName:contact.middleName lastName:contact.familyName phones: phones isAvailableImage:contact.imageDataAvailable];
+                    ContactEntity *newContact = [[ContactEntity alloc] initWithIdentifier:contact.identifier
+                                                                                firstName:contact.givenName
+                                                                               middleName:contact.middleName
+                                                                                 lastName:contact.familyName
+                                                                                   phones:phones
+                                                                         isAvailableImage:contact.imageDataAvailable];
                     [contacts addObject:newContact];
                 }
                 @catch (NSException *exception)
@@ -109,7 +114,7 @@
                     completion(contact.thumbnailImageData, nil);
                 } else {
                     completion(contact.imageData, nil);
-                }                
+                }
             }
         }
     });

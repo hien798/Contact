@@ -20,6 +20,11 @@
 @property (nonatomic) NSMutableDictionary *contactList;
 
 - (id)init;
-- (id)initWithIdentifier:(NSString *)identifier firstName:(NSString *)firstName middleName:(NSString *)middleName lastName:(NSString *)lastName phones:(NSArray *)phones isAvailableImage:(BOOL)isAvailableImage;
+- (id)initWithIdentifier:(NSString *)identifier
+               firstName:(NSString *)firstName
+              middleName:(NSString *)middleName
+                lastName:(NSString *)lastName
+                  phones:(NSArray *)phones
+        isAvailableImage:(BOOL)isAvailableImage;
 
 @end

@@ -109,9 +109,9 @@
 }
 
 - (void)constraintData {
-    [self.tableView setDelegate: self];
-    [self.collectionView setDelegate: self];
-    [self.searchBar setDelegate: self];
+    [self.tableView setDelegate:self];
+    [self.collectionView setDelegate:self];
+    [self.searchBar setDelegate:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -132,7 +132,6 @@
         NSUInteger index = [self indexInSelectedItemsOfContact:contact];
         [self.selectedItems removeObjectAtIndex:index];
         [self recompileCollectionViewModelDataWithListArray:self.selectedItems];
-        //        [self.selectedItems addObject:contact]; ### remove item from collection view
         if ([self.selectedItems count] <= 0) {
             [UIView animateWithDuration:0.3 animations:^{
                 [self.collectionView setHidden:YES];
@@ -140,8 +139,10 @@
         }
     } else {
         if ([self.selectedItems count] >= 5) {
-            // Out of range
-            NSLog(@"Chon qua 5 nguoi");
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Thông báo" message:@"Không được chọn quá 5 người" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:nil];
+            [alertController addAction:okAction];
+            [self presentViewController:alertController animated:YES completion:nil];
         } else {
             [contact setChecked:!contact.checked];
             ZATableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -149,7 +150,6 @@
             NICollectionViewCellObject *cellObject = [[NICollectionViewCellObject alloc] initWithCellClass:[ZACollectionViewCell class] userInfo:contact];
             [self.selectedItems addObject:cellObject];
             [self recompileCollectionViewModelDataWithListArray:self.selectedItems];
-            // add item to collection view
             [UIView animateWithDuration:0.3 animations:^{
                 [self.collectionView setHidden:NO];
             }];
@@ -175,14 +175,6 @@
 
 // UISearchBar delegate
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    NSLog(@"begin search");
-}
-
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
-    NSLog(@"end search");
-}
-
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     [self.searchBar setText:@""];
     [self.searchBar endEditing:YES];
@@ -194,20 +186,13 @@
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-  
     if ([searchText isEqualToString:@""]) {
-        // normal searching is NO
-        NSLog(@"no searcing");
         [self.tableView reloadData];
     } else {
-        // searching is YES
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.userInfo.firstName contains[c] %@ OR SELF.userInfo.lastName contains[c] %@", searchText, searchText];
         self.searchedContactList = [self.contactListArray filteredArrayUsingPredicate:predicate];
-        NSLog(@"%lu: ", (unsigned long)[_searchedContactList count]);
         [self recompileTableViewModelDataWithListArray:self.searchedContactList];
     }
-    
-    
 }
 
 // Done and Cancel
@@ -232,6 +217,7 @@
 // Utils
 
 - (NSUInteger)indexInSelectedItemsOfContact:(ContactEntity *)contact {
+    
     for (NSInteger i=0; i<[self.selectedItems count]; i++) {
         NICollectionViewCellObject *object = [self.selectedItems objectAtIndex:i];
         if (contact == object.userInfo) {
@@ -242,6 +228,7 @@
 }
 
 - (NSIndexPath *)indexInContacSectionArrayOfContact:(ContactEntity *)contact {
+    
     for (NSInteger section=0; section<[self.tableView numberOfSections]; section++) {
         for (NSInteger row=0; row<[self.tableView numberOfRowsInSection:section]; row++) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];

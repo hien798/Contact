@@ -37,10 +37,10 @@ static NSCache *imageCache;
                 });
             }
         } else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(nil, error);
-                });
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil, error);
+            });
+        }
     }];
 }
 
@@ -73,7 +73,7 @@ static NSCache *imageCache;
                         [allContacts setValue:listContact forKey:category];
                     }
                     
-                }                
+                }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completion(allContacts, error);
                 });

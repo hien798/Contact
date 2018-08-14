@@ -39,4 +39,41 @@
     
 }
 
+- (void)testPerformance {
+    
+    [self measureBlock:^{
+        XCUIApplication *app = [[XCUIApplication alloc] init];
+        [app.buttons[@"Nimbus"] tap];
+        
+        XCUIElementQuery *tableQuery = app.tables;
+        [tableQuery.staticTexts[@"HH"] tap];
+        [tableQuery.staticTexts[@"DT"] tap];
+        [tableQuery.cells.staticTexts[@"K"] tap];
+        [tableQuery.staticTexts[@"AH"] tap];
+        [tableQuery.staticTexts[@"HH"] tap];
+        [tableQuery.staticTexts[@"HH"] tap];
+        [tableQuery.staticTexts[@"HH"] doubleTap];
+        
+        XCUIElementQuery *tablesQuery = [[XCUIApplication alloc] init].tables;
+        [tablesQuery/*@START_MENU_TOKEN@*/.staticTexts[@"Hank Zakroff"]/*[[".cells.staticTexts[@\"Hank Zakroff\"]",".staticTexts[@\"Hank Zakroff\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/ swipeUp];
+        
+        [tableQuery.staticTexts[@"X"] tap];
+        // DT, K, AH, HH, X
+        
+
+        
+        
+        XCUIElementQuery *collectionQuery = app.collectionViews;
+        [collectionQuery.staticTexts[@"DT"] tap];
+        [collectionQuery.staticTexts[@"HH"] tap];
+        [collectionQuery.staticTexts[@"K"] tap];
+        [collectionQuery.staticTexts[@"X"] tap];
+        [collectionQuery.staticTexts[@"AH"] tap];
+        
+        
+    }];
+    
+    
+}
+
 @end
