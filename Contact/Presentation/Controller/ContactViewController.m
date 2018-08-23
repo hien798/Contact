@@ -31,7 +31,7 @@
     [self initData];
     [self constraintData];
     
-    [[ContactPicker sharedInstance] getAllContactsWithSection:^(NSDictionary *contacts, NSError * _Nullable error) {
+    [[ContactPicker sharedInstance] getAllContactsWithSection:^(NSDictionary *contacts, NSError *error) {
         if (error) {
             NSLog(@"Error:%@", error.description);
         } else {
@@ -51,18 +51,20 @@
 }
 
 - (void)initData {
-    self.selectedItems = [[NSMutableArray alloc] init];
-    [self setIsSearching:NO];
+    _selectedItems = [[NSMutableArray alloc] init];
+    _isSearching = NO;
 }
 
 - (void)constraintData {
-    [self.tableView setDelegate:self];
-    [self.tableView setDataSource:self];
-    [self.collectionView setDataSource:self];
-    [self.collectionView setDelegate:self];
-    [self.searchBar setDelegate:self];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
     [self.tableView registerClass:[ZATableViewCell class] forCellReuseIdentifier:@"tableViewCell"];
+    
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
     [self.collectionView registerClass:[ZACollectionViewCell class] forCellWithReuseIdentifier:@"collectionViewCell"];
+    
+    self.searchBar.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -71,7 +73,7 @@
 }
 
 
-// UITableViewDelegate,UITableViewDataSource
+# pragma mark - UITableViewDelegate, UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if (!_isSearching) {
@@ -93,7 +95,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (!_isSearching) {
         NSString *key = [self.allCategories objectAtIndex:section];
-        return [[_contactSection objectForKey:key] count];
+        NSUInteger count = [[_contactSection objectForKey:key] count];
+        return count;
     } else {
         return [_searchedContactList count];
     }
@@ -102,9 +105,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ZATableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"tableViewCell"];
     ContactEntity *contact = [self contactAtIndexPath:indexPath];
-    [cell.title setText:[NSString stringWithFormat:@"%@ %@", contact.firstName, contact.lastName]];
-    [cell.avatar setText:[contact.contactList objectForKey:@"avatar"]];
-    [cell setAvatarColorWithTitle:cell.avatar.text];
+    cell.title.text = [NSString stringWithFormat:@"%@ %@", contact.firstName, contact.lastName];
+    cell.avatarLabel.text = [contact.contactList objectForKey:@"avatar"];
+    [cell setAvatarColorWithTitle:cell.avatarLabel.text];
     if (contact.isAvailableImage) {
         [[ContactPicker sharedInstance] getThumbnailImageWithIdentifier:contact.identifier completion:^(UIImage *thumbnailImage, NSError *error) {
             [cell setThumbnailWithImage:thumbnailImage];
@@ -113,9 +116,9 @@
         [cell setThumbnailWithImage:nil];
     }
     if (contact.checked) {
-        [cell.tickBox setImage:[UIImage imageNamed:@"ic-tick"]];
+        cell.tickBox.image = [UIImage imageNamed:@"ic-tick"];
     } else {
-        [cell.tickBox setImage:[UIImage imageNamed:@"ic-none"]];
+        cell.tickBox.image = [UIImage imageNamed:@"ic-none"];
     }
     return cell;
 }
@@ -125,7 +128,7 @@
     ContactEntity *contact = [self contactAtIndexPath:indexPath];
     if (contact.checked) { // Uncheck
         ZATableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        [cell.tickBox setImage:[UIImage imageNamed:@"ic-none"]];
+        cell.tickBox.image = [UIImage imageNamed:@"ic-none"];
         NSUInteger index = [_selectedItems indexOfObject:contact];
         [self.collectionView performBatchUpdates:^{
             [self.selectedItems removeObjectAtIndex:index];
@@ -133,10 +136,10 @@
         } completion:nil];
         if ([_selectedItems count] <= 0) {
             [UIView animateWithDuration:0.3 animations:^{
-                [self.collectionView setHidden:YES];
+                self.collectionView.hidden = YES;
             }];
         }
-        [contact setChecked:!contact.checked];
+        contact.checked = !contact.checked;
     } else { // Check
         if ([_selectedItems count] >= 5) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Thông báo" message:@"Không được chọn quá 5 người" preferredStyle:UIAlertControllerStyleAlert];
@@ -145,7 +148,7 @@
             [self presentViewController:alertController animated:YES completion:nil];
         } else {
             ZATableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            [cell.tickBox setImage:[UIImage imageNamed:@"ic-tick"]];
+            cell.tickBox.image = [UIImage imageNamed:@"ic-tick"];
             [_selectedItems addObject:contact];
             NSIndexPath *lastIndex = [NSIndexPath indexPathForItem:[_selectedItems count]-1 inSection:0];
             [self.collectionView performBatchUpdates:^{
@@ -154,9 +157,9 @@
                 if (finished) {
                 }
             }];
-            [contact setChecked:!contact.checked];
+            contact.checked = !contact.checked;
             [UIView animateWithDuration:0.3 animations:^{
-                [self.collectionView setHidden:NO];
+                self.collectionView.hidden = NO;
             }];
         }
     }
@@ -167,7 +170,7 @@
 }
 
 
-// UICollectionViewDelegate, UICollectibViewDataSource
+# pragma mark - UICollectionViewDelegate, UICollectibViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return [_selectedItems count];
@@ -176,8 +179,8 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ZACollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"collectionViewCell" forIndexPath:indexPath];
     ContactEntity *contact = [_selectedItems objectAtIndex:indexPath.row];
-    [cell.avatar setText:[contact.contactList objectForKey:@"avatar"]];
-    [cell setAvatarColorWithTitle:cell.avatar.text];
+    cell.avatarLabel.text = [contact.contactList objectForKey:@"avatar"];
+    [cell setAvatarColorWithTitle:cell.avatarLabel.text];
     if (contact.isAvailableImage) {
         [[ContactPicker sharedInstance] getThumbnailImageWithIdentifier:contact.identifier completion:^(UIImage *thumbnailImage, NSError *error) {
             [cell setThumbnailWithImage:thumbnailImage];
@@ -189,8 +192,8 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    [self setIsSearching:NO];
-    [self.searchBar setText:@""];
+    _isSearching = NO;
+    self.searchBar.text = @"";
     [self.searchBar endEditing:YES];
     [self.tableView reloadData];
     ContactEntity *contact = [_selectedItems objectAtIndex:indexPath.row];
@@ -199,11 +202,11 @@
 }
 
 
-// UISearchBar delegate
+# pragma mark - UISearchBarDelegate
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [self setIsSearching:NO];
-    [self.searchBar setText:@""];
+    _isSearching = NO;
+    self.searchBar.text = @"";
     [self.searchBar endEditing:YES];
     [self.tableView reloadData];
 }
@@ -214,10 +217,10 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     if ([searchText isEqualToString:@""]) {
-        [self setIsSearching:NO];
+        _isSearching = NO;
         [self.tableView reloadData];
     } else {
-        [self setIsSearching:YES];
+        _isSearching = YES;
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.firstName contains[c] %@ OR SELF.lastName contains[c] %@", searchText, searchText];
         _searchedContactList = [_contactList filteredArrayUsingPredicate:predicate];
         [self.tableView reloadData];
@@ -225,24 +228,25 @@
 }
 
 
-// Done and Cancel
+/// Done and Cancel
 
 - (void)cancelSelection {
     for (ContactEntity *contact in self.selectedItems) {
-        [contact setChecked:NO];
+        contact.checked = NO;
     }
     [self.selectedItems removeAllObjects];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)doneSelection {
-    [self setIsSearching:NO];
-    [self.searchBar setText:@""];
+    _isSearching = NO;
+    self.searchBar.text = @"";
     [self.searchBar endEditing:YES];
     [self.tableView reloadData];
 }
 
-// Utils
+
+/// Utils
 
 - (ContactEntity *)contactAtIndexPath:(NSIndexPath *)indexPath {
     ContactEntity *result;

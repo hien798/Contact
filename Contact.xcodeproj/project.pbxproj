@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		90218888212516250091FF1E /* ContactCellObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 90218887212516250091FF1E /* ContactCellObject.m */; };
 		9027E6FA21194CB000564469 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9027E6F921194CB000564469 /* AppDelegate.m */; };
 		9027E70221194CB100564469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9027E70121194CB100564469 /* Assets.xcassets */; };
 		9027E70821194CB100564469 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9027E70721194CB100564469 /* main.m */; };
@@ -74,6 +75,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		90218886212516250091FF1E /* ContactCellObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactCellObject.h; sourceTree = "<group>"; };
+		90218887212516250091FF1E /* ContactCellObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactCellObject.m; sourceTree = "<group>"; };
 		9027E6F521194CB000564469 /* Contact.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Contact.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9027E6F821194CB000564469 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9027E6F921194CB000564469 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -209,6 +212,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		90218881212515120091FF1E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				90218886212516250091FF1E /* ContactCellObject.h */,
+				90218887212516250091FF1E /* ContactCellObject.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		9027E6EC21194CB000564469 = {
 			isa = PBXGroup;
 			children = (
@@ -292,6 +304,7 @@
 		9027E73B2119541A00564469 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				90218881212515120091FF1E /* Model */,
 				907E5683211DAEAB0060C4F5 /* View */,
 				907E5684211DAEBC0060C4F5 /* Controller */,
 			);
@@ -618,6 +631,7 @@
 				9027E7812119551300564469 /* NICommonMetrics.m in Sources */,
 				9027E78B2119551300564469 /* NINetworkActivity.m in Sources */,
 				9027E7902119551300564469 /* NIRuntimeClassModifications.m in Sources */,
+				90218888212516250091FF1E /* ContactCellObject.m in Sources */,
 				9027E7A92119552500564469 /* NIRadioGroup.m in Sources */,
 				9027E7B02119552500564469 /* NICellCatalog.m in Sources */,
 				9027E7B12119552500564469 /* NIFormCellCatalog.m in Sources */,

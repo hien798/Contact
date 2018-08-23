@@ -14,11 +14,10 @@
 - (id)init {
     self = [super init];
     if (self != nil) {
-        [self setFirstName:@""];
-        [self setMiddleName:@""];
-        [self setLastName:@""];
-        NSMutableDictionary *contactList = [[NSMutableDictionary alloc] init];
-        [self setContactList:contactList];
+        _firstName = @"";
+        _middleName = @"";
+        _lastName = @"";
+        _contactList = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -30,15 +29,19 @@
                   phones:(NSArray *)phones
         isAvailableImage:(BOOL)isAvailableImage {
     
-    [self setIdentifier:identifier];
-    [self setFirstName:firstName];
-    [self setMiddleName:@""];
-    [self setLastName:lastName];
-    [self setIsAvailableImage:isAvailableImage];
-    [self setChecked:NO];
-    NSMutableDictionary *contactList = [[NSMutableDictionary alloc] initWithObjectsAndKeys:phones, @"phones", nil];
-    [self setContactList:contactList];
-    [self setAvatar];
+    self = [super init];
+    
+    if (self) {
+        _identifier = identifier;
+        _firstName = firstName;
+        _middleName = @"";
+        _lastName = lastName;
+        _isAvailableImage = isAvailableImage;
+        _checked = NO;
+        _contactList = [[NSMutableDictionary alloc] initWithObjectsAndKeys:phones, @"phones", nil];
+        [self setAvatar];
+    }
+    
     return self;
 }
 

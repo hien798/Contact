@@ -12,40 +12,40 @@
 @implementation ZACollectionViewCell
 
 - (void)initAvatar {
-    _avatar = [[UILabel alloc] init];
-    [_avatar setBackgroundColor:[UIColor grayColor]];
-    [_avatar setTextAlignment:NSTextAlignmentCenter];
-    [_avatar setTextColor:[UIColor whiteColor]];
-    [_avatar setFont:[UIFont systemFontOfSize:20.0]];
-    [_avatar.layer setCornerRadius:0.5*50];
-    [_avatar.layer setMasksToBounds:YES];
+    _avatarLabel = [[UILabel alloc] init];
+    _avatarLabel.backgroundColor = [UIColor grayColor];
+    _avatarLabel.textAlignment = NSTextAlignmentCenter;
+    _avatarLabel.textColor = [UIColor whiteColor];
+    _avatarLabel.font = [UIFont systemFontOfSize:20.0];
+    _avatarLabel.layer.cornerRadius = 0.5*50;
+    _avatarLabel.layer.masksToBounds = YES;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     [self initAvatar];
     [self initThumbnail];
-    [self.contentView addSubview:_avatar];
-    [self.contentView addSubview:_thumbnail];
-    [_avatar setFrame:CGRectMake(10, 0, 50, 50)]; // cell frame height = 70
-    [_thumbnail setFrame:_avatar.frame];
-    [self setBackgroundColor:[UIColor clearColor]];
+    [self.contentView addSubview:_avatarLabel];
+    [self.contentView addSubview:_thumbnailImage];
+    _avatarLabel.frame = CGRectMake(10, 0, 50, 50); // cell frame height = 70
+    _thumbnailImage.frame = _avatarLabel.frame;
+    self.backgroundColor = [UIColor clearColor];
     return self;
 }
 
 - (void)initThumbnail {
-    _thumbnail = [[UIImageView alloc] init];
-    [_thumbnail.layer setCornerRadius:0.5*50]; // table row height = 70;
-    [_thumbnail.layer setMasksToBounds:YES];
+    _thumbnailImage = [[UIImageView alloc] init];
+    _thumbnailImage.layer.cornerRadius = 0.5*50;
+    _thumbnailImage.layer.masksToBounds = YES;
 }
 
 - (void)setThumbnailWithImage:(UIImage *)image {
-    [_thumbnail setImage:image];
+    _thumbnailImage.image = image;
 }
 
 - (void)setAvatarColorWithTitle:(NSString *)title {
     UIColor *color = [self getColorWithTitle:title];
-    [_avatar setBackgroundColor:color];
+    _avatarLabel.backgroundColor = color;
 }
 
 - (UIColor *)getColorWithTitle:(NSString *)title {
@@ -61,11 +61,14 @@
     }
 }
 
+
+# pragma mark - NICollectionViewCell
+
 - (BOOL)shouldUpdateCellWithObject:(id)object {
     NICollectionViewCellObject *cellObject = object;
     ContactEntity *contact = cellObject.userInfo;
-    [self.avatar setText:[contact.contactList objectForKey:@"avatar"]];
-    [self setAvatarColorWithTitle:self.avatar.text];
+    _avatarLabel.text = [contact.contactList objectForKey:@"avatar"];
+    [self setAvatarColorWithTitle:self.avatarLabel.text];
     if (contact.isAvailableImage) {
         [[ContactPicker sharedInstance] getThumbnailImageWithIdentifier:contact.identifier completion:^(UIImage *thumbnailImage, NSError *error) {
             [self setThumbnailWithImage:thumbnailImage];

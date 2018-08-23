@@ -18,6 +18,7 @@
     [super viewDidLoad];
     [self initNavigationBar];
     [self initStackView];
+    [self initGestureRecognize];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -31,19 +32,19 @@
 
 - (void)initSearchBar {
     _searchBar = [[UISearchBar alloc] init];
-    [_searchBar setTranslatesAutoresizingMaskIntoConstraints:NO];
+    _searchBar.translatesAutoresizingMaskIntoConstraints = NO;
     [_searchBar setShowsCancelButton:YES animated:YES];
 }
 
 - (void)initCollectionView {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    [layout setSectionInset:UIEdgeInsetsMake(0, 0, 0, 0)];
-    [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-    [layout setMinimumLineSpacing:5];
-    [layout setMinimumInteritemSpacing:0];
+    layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    layout.minimumLineSpacing = 5;
+    layout.minimumInteritemSpacing = 0;
     _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-    [_collectionView setHidden:YES];
-    [_collectionView setBackgroundColor:[UIColor lightGrayColor]];
+    _collectionView.hidden = YES;
+    _collectionView.backgroundColor = [UIColor lightGrayColor];
 }
 
 - (void)initStackView {
@@ -51,11 +52,11 @@
     [self initSearchBar];
     [self initCollectionView];
     _stackView = [[UIStackView alloc] initWithArrangedSubviews:@[_collectionView, _searchBar, _tableView]];
-    [_stackView setAxis:UILayoutConstraintAxisVertical];
-    [_stackView setDistribution:UIStackViewDistributionFill];
-    [_stackView setAlignment:UIStackViewAlignmentFill];
-    [_stackView setSpacing:0];
-    [_stackView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    _stackView.axis = UILayoutConstraintAxisVertical;
+    _stackView.distribution = UIStackViewDistributionFill;
+    _stackView.alignment = UIStackViewAlignmentFill;
+    _stackView.spacing = 0;
+    _stackView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_stackView];
     
     NSDictionary *viewsDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:_stackView, @"stackView", _collectionView, @"collectionView", nil];
@@ -78,10 +79,8 @@
 
 - (void)initNavigationBar {
     [self setTitle:@"Select Friends"];
-    UIBarButtonItem *leftBarBtn = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(touchCancelBtn:)];
-    UIBarButtonItem *rightBarBtn = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(touchDonelBtn:)];
-    [self.navigationItem setLeftBarButtonItem:leftBarBtn];
-    [self.navigationItem setRightBarButtonItem:rightBarBtn];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(touchCancelBtn:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(touchDonelBtn:)];
 }
 
 - (void)touchCancelBtn:(UIBarButtonItem *)sender {
@@ -100,14 +99,16 @@
     NSLog(@"Done");
 }
 
+# pragma mark - UIGestureRecognizer
+
 - (void)initGestureRecognize {
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-    [tap setCancelsTouchesInView:NO];
+    tap.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tap];
     
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
-    [swipe setDirection:UISwipeGestureRecognizerDirectionUp];
-    [swipe setDelegate:self];
+    swipe.direction = UISwipeGestureRecognizerDirectionUp;
+    swipe.delegate = self;
     [self.view addGestureRecognizer:swipe];
 }
 
@@ -119,7 +120,8 @@
     [self.view endEditing:YES];
 }
 
-// Gesture Delegate
+
+# pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;

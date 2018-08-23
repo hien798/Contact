@@ -18,60 +18,60 @@
 
 - (void)initTitle {
     _title = [[UILabel alloc] init];
-    [_title setFont:[UIFont systemFontOfSize:18.0]];
+    _title.font = [UIFont systemFontOfSize:18.0];
 }
 
 - (void)initAvatar {
-    _avatar = [[UILabel alloc] init];
-    [_avatar setBackgroundColor:[UIColor grayColor]];
-    [_avatar setTextAlignment:NSTextAlignmentCenter];
-    [_avatar setTextColor:[UIColor whiteColor]];
-    [_avatar setFont:[UIFont systemFontOfSize:20.0]];
-    
-    [_avatar.layer setCornerRadius:0.5*50]; // table row height = 70;
-    [_avatar.layer setMasksToBounds:YES];
+    _avatarLabel = [[UILabel alloc] init];
+    _avatarLabel.backgroundColor = [UIColor grayColor];
+    _avatarLabel.textAlignment = NSTextAlignmentCenter;
+    _avatarLabel.textColor = [UIColor whiteColor];
+    _avatarLabel.font = [UIFont systemFontOfSize:20.0];
+    _avatarLabel.layer.cornerRadius = 0.5*50;
+    _avatarLabel.layer.masksToBounds = YES;
 }
 
 - (void)initThumbnail {
-    _thumbnail = [[UIImageView alloc] init];
-    [_thumbnail.layer setCornerRadius:0.5*50]; // table row height = 70;
-    [_thumbnail.layer setMasksToBounds:YES];
+    _thumbnailImage = [[UIImageView alloc] init];
+    _thumbnailImage.layer.cornerRadius = 0.5*50;
+    _thumbnailImage.layer.masksToBounds = YES;
 }
 
 - (void)initTickBox {
     _tickBox = [[UIImageView alloc] init];
-    [_tickBox setContentMode:UIViewContentModeScaleAspectFill];
-    [_tickBox setClipsToBounds:YES];
-    [_tickBox.layer setCornerRadius:0.5*30];
-    [_tickBox.layer setMasksToBounds:YES];
+    _tickBox.contentMode = UIViewContentModeScaleAspectFill;
+    _tickBox.clipsToBounds = YES;
+    _tickBox.layer.cornerRadius = 0.5*30;
+    _tickBox.layer.masksToBounds = YES;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     [self initTitle];
     [self initAvatar];
     [self initTickBox];
     [self initThumbnail];
     [self.contentView addSubview:_tickBox];
     [self.contentView addSubview:_title];
-    [self.contentView addSubview:_avatar];
-    [self.contentView addSubview:_thumbnail];
+    [self.contentView addSubview:_avatarLabel];
+    [self.contentView addSubview:_thumbnailImage];
     
-    [_tickBox setFrame:CGRectMake(10, 20, 30, 30)];
-    [_avatar setFrame:CGRectMake(_tickBox.frame.origin.x + _tickBox.frame.size.width + 10, 10, 50, 50)];
-    [_title setFrame:CGRectMake(_avatar.frame.origin.x + _avatar.frame.size.width + 10, _avatar.frame.origin.y, self.bounds.size.width - _avatar.frame.origin.x + _avatar.frame.size.width + 10, _avatar.frame.size.height)];
-    [_thumbnail setFrame:_avatar.frame];
+    _tickBox.frame = CGRectMake(10, 20, 30, 30);
+    _avatarLabel.frame = CGRectMake(_tickBox.frame.origin.x + _tickBox.frame.size.width + 10, 10, 50, 50);
+    _title.frame = CGRectMake(_avatarLabel.frame.origin.x + _avatarLabel.frame.size.width + 10, _avatarLabel.frame.origin.y, self.bounds.size.width - _avatarLabel.frame.origin.x + _avatarLabel.frame.size.width + 10, _avatarLabel.frame.size.height);
+    _thumbnailImage.frame = _avatarLabel.frame;
+    
     return self;
 }
 
 - (void)setThumbnailWithImage:(UIImage *)image {
-    [_thumbnail setImage:image];
+    _thumbnailImage.image = image;
 }
 
 - (void)setAvatarColorWithTitle:(NSString *)title {
     UIColor *color = [self getColorWithTitle:title];
-    [_avatar setBackgroundColor:color];
+    _avatarLabel.backgroundColor = color;
 }
 
 - (UIColor *)getColorWithTitle:(NSString *)title {
@@ -87,12 +87,15 @@
     }
 }
 
+
+# pragma mark - NICell
+
 - (BOOL)shouldUpdateCellWithObject:(id)object {
     NICellObject *cellObject = object;
     ContactEntity *contact = cellObject.userInfo;
-    [self.title setText:[NSString stringWithFormat:@"%@ %@", contact.firstName, contact.lastName]];
-    [self.avatar setText:[contact.contactList objectForKey:@"avatar"]];
-    [self setAvatarColorWithTitle:self.avatar.text];
+    _title.text = [NSString stringWithFormat:@"%@ %@", contact.firstName, contact.lastName];
+    _avatarLabel.text = [contact.contactList objectForKey:@"avatar"];
+    [self setAvatarColorWithTitle:self.avatarLabel.text];
     if (contact.isAvailableImage) {
         [[ContactPicker sharedInstance] getThumbnailImageWithIdentifier:contact.identifier completion:^(UIImage *thumbnailImage, NSError *error) {
             [self setThumbnailWithImage:thumbnailImage];
@@ -101,9 +104,9 @@
         [self setThumbnailWithImage:nil];
     }
     if (contact.checked) {
-        [self.tickBox setImage:[UIImage imageNamed:@"ic-tick"]];
+        _tickBox.image = [UIImage imageNamed:@"ic-tick"];
     } else {
-        [self.tickBox setImage:[UIImage imageNamed:@"ic-none"]];
+        _tickBox.image = [UIImage imageNamed:@"ic-none"];
     }
     return YES;
 }

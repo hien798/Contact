@@ -12,10 +12,20 @@
 
 @interface ZACollectionViewCell : UICollectionViewCell <NICollectionViewCell>
 
-@property (nonatomic) UILabel *avatar;
-@property (nonatomic) UIImageView *thumbnail;
+@property (nonatomic) UILabel *avatarLabel;
+@property (nonatomic) UIImageView *thumbnailImage;
 
+/**
+ * Generate a color base on a string and set thumbnail background color with it
+ * If contact has no image, a label with this background color will be shown
+ * @param title A string generate color
+ */
 - (void)setAvatarColorWithTitle:(NSString *)title;
+
+/**
+ * Set thumbnail image for contact
+ * @param image The image has been loaded from phonebook
+ */
 - (void)setThumbnailWithImage:(UIImage *)image;
 
 @end

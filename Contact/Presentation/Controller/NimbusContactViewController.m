@@ -35,7 +35,7 @@
     [self initData];
     [self constraintData];
     
-    [[ContactPicker sharedInstance] getAllContactsWithSection:^(NSDictionary *contacts, NSError * _Nullable error) {
+    [[ContactPicker sharedInstance] getAllContactsWithSection:^(NSDictionary *contacts, NSError *error) {
         if (error) {
             NSLog(@"Error: %@", error.description);
         } else {
@@ -61,7 +61,7 @@
 - (void)buildTableViewModelWithSectionArray:(NSArray *)contactSectionArray {
     if (!self.tableView.dataSource) {
         self.tableViewModel = [[NITableViewModel alloc] initWithSectionedArray:contactSectionArray delegate:(id)[NICellFactory class]];
-        [self.tableView setDataSource:self.tableViewModel];
+        self.tableView.dataSource = self.tableViewModel;
         [self.tableView reloadData];
     } else {
         [self recompileTableViewModelDataWithSectionArray:contactSectionArray];
@@ -76,7 +76,7 @@
 - (void)buildTableViewModelWithListArray:(NSArray *)contactListArray {
     if (!self.tableView.dataSource) {
         self.tableViewModel = [[NITableViewModel alloc] initWithListArray:contactListArray delegate:(id)[NICellFactory class]];
-        [self.tableView setDataSource:self.tableViewModel];
+        self.tableView.dataSource = self.tableViewModel;
         [self.tableView reloadData];
     } else {
         [self recompileTableViewModelDataWithListArray:contactListArray];
@@ -91,7 +91,7 @@
 - (void)buildCollectionViewWithListArray:(NSArray *)contactListArray {
     if (!self.collectionView.dataSource) {
         self.collectionViewModel = [[NICollectionViewModel alloc] initWithListArray:contactListArray delegate:(id)[NICollectionViewCellFactory class]];
-        [self.collectionView setDataSource:self.collectionViewModel];
+        self.collectionView.dataSource = self.collectionViewModel;
         [self.collectionView reloadData];
     } else {
         [self recompileCollectionViewModelDataWithListArray:contactListArray];
@@ -109,9 +109,9 @@
 }
 
 - (void)constraintData {
-    [self.tableView setDelegate:self];
-    [self.collectionView setDelegate:self];
-    [self.searchBar setDelegate:self];
+    self.tableView.delegate = self;
+    self.collectionView.delegate = self;
+    self.searchBar.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -120,13 +120,13 @@
 }
 
 
-// UITableViewDelegate,UITableViewDataSource
+# pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NICellObject *object = [self.tableViewModel objectAtIndexPath:indexPath];
     ContactEntity *contact = object.userInfo;
     if (contact.checked) {
-        [contact setChecked:!contact.checked];
+        contact.checked = !contact.checked;
         ZATableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         [cell shouldUpdateCellWithObject:object];
         NSUInteger index = [self indexInSelectedItemsOfContact:contact];
@@ -134,7 +134,7 @@
         [self recompileCollectionViewModelDataWithListArray:self.selectedItems];
         if ([self.selectedItems count] <= 0) {
             [UIView animateWithDuration:0.3 animations:^{
-                [self.collectionView setHidden:YES];
+                self.collectionView.hidden = YES;
             }];
         }
     } else {
@@ -144,14 +144,14 @@
             [alertController addAction:okAction];
             [self presentViewController:alertController animated:YES completion:nil];
         } else {
-            [contact setChecked:!contact.checked];
+            contact.checked = !contact.checked;
             ZATableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
             [cell shouldUpdateCellWithObject:object];
             NICollectionViewCellObject *cellObject = [[NICollectionViewCellObject alloc] initWithCellClass:[ZACollectionViewCell class] userInfo:contact];
             [self.selectedItems addObject:cellObject];
             [self recompileCollectionViewModelDataWithListArray:self.selectedItems];
             [UIView animateWithDuration:0.3 animations:^{
-                [self.collectionView setHidden:NO];
+                self.collectionView.hidden = NO;
             }];
         }
     }
@@ -161,10 +161,10 @@
     return 70;
 }
 
-// UICollectionViewDelegate, UICollectibViewDataSource
+# pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    [self.searchBar setText:@""];
+    self.searchBar.text = @"";
     [self.searchBar endEditing:YES];
     [self recompileTableViewModelDataWithSectionArray:self.contactSectionArray];
     NICollectionViewCellObject *cellObject = [_selectedItems objectAtIndex:indexPath.row];
@@ -173,10 +173,10 @@
 }
 
 
-// UISearchBar delegate
+# pragma mark - UISearchBarDelegate
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [self.searchBar setText:@""];
+    self.searchBar.text = @"";
     [self.searchBar endEditing:YES];
     [self recompileTableViewModelDataWithSectionArray:self.contactSectionArray];
 }
@@ -195,26 +195,27 @@
     }
 }
 
-// Done and Cancel
+
+/// Done and Cancel
 
 - (void)cancelSelection {
     
     for (NICollectionViewCellObject *object in self.selectedItems) {
         ContactEntity *contact = object.userInfo;
-        [contact setChecked:NO];
+         contact.checked = NO;
     }
     [self.selectedItems removeAllObjects];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)doneSelection {
-    [self.searchBar setText:@""];
+    self.searchBar.text = @"";
     [self.searchBar endEditing:YES];
     [self recompileTableViewModelDataWithSectionArray:self.contactSectionArray];
 }
 
 
-// Utils
+/// Utils
 
 - (NSUInteger)indexInSelectedItemsOfContact:(ContactEntity *)contact {
     

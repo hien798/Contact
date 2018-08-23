@@ -8,6 +8,22 @@
 
 #import "ContactAdapter.h"
 
+NSString * const kErrorDomain = @"vng.contact";
+
+@interface ContactAdapter ()
+@property (nonatomic) CNContactStore *store;
+@end
+
+typedef NS_ENUM(NSInteger, ZAAuthorizationStatus) {
+    ZAAuthorizationStatusAuthorized,
+    ZAAuthorizationStatusDenied
+};
+
+typedef NS_ENUM(NSInteger, ZALoadImageStatus) {
+    ZALoadImageStatusInvalidIdentifier,
+    ZALoadImageStatusFailed
+};
+
 @implementation ContactAdapter
 
 + (instancetype)sharedInstance {
@@ -15,54 +31,63 @@
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         instance = [[self alloc] init];
-        instance.store = [[CNContactStore alloc] init];
     });
     return instance;
 }
 
-- (void)requestPermission:(void (^)(BOOL granted, NSError * _Nullable error))completion {
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.store = [[CNContactStore alloc] init];
+    }
+    return self;
+}
+
+- (void)requestPermission:(void (^)(BOOL granted, NSError *error))completion {
     
     CNAuthorizationStatus authorizationStatus = [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts];
     
     switch (authorizationStatus) {
         case CNAuthorizationStatusAuthorized:
         {
-            completion(YES, nil);
+            completion ? completion(YES, nil) : nil;
             break;
         }
         case CNAuthorizationStatusDenied:
         {
-            NSError* error = [NSError errorWithDomain:@"vng.contact" code:CNAuthorizationStatusDenied userInfo:@{@"message": @"Contact access denied, please open preferences and allow application access contact"}];
-            completion(NO, error);
+            NSError* error = [NSError errorWithDomain:kErrorDomain code:ZAAuthorizationStatusDenied userInfo:@{@"message": @"Contact access denied, please open preferences and allow application access contact"}];
+            completion ? completion(NO, error) : nil;
             break;
         }
         case CNAuthorizationStatusRestricted:
         {
-            NSError* error = [NSError errorWithDomain:@"vng.contact" code:CNAuthorizationStatusDenied userInfo:@{@"message": @"Restricted access to contact"}];
-            completion(NO, error);
+            NSError* error = [NSError errorWithDomain:kErrorDomain code:ZAAuthorizationStatusDenied userInfo:@{@"message": @"Restricted access to contact"}];
+            completion ? completion(NO, error) : nil;
             break;
         }
         case CNAuthorizationStatusNotDetermined:
         {
-            [self.store requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            [self.store requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError *error) {
                 if (granted) {
-                    completion(granted, nil);
+                    completion ? completion(granted, nil) : nil;
                 } else {
-                    NSError* error = [NSError errorWithDomain:@"vng.contact" code:CNAuthorizationStatusDenied userInfo:@{@"message": @"No permission to access contact"}];
-                    completion(NO, error);
+                    NSError* error = [NSError errorWithDomain:kErrorDomain code:ZAAuthorizationStatusDenied userInfo:@{@"message": @"No permission to access contact"}];
+                    completion ? completion(NO, error) : nil;
                 }
             }];        
             break;
         }
         default:
-            completion(NO, nil);
+            completion ? completion(NO, nil) : nil;
             break;
     }
 }
 
-- (void)fetchAllContactsHandler:(void(^)(BOOL granted, NSArray *contacts, NSError * _Nullable error))completion {
-    
-    [self requestPermission:^(BOOL granted, NSError * _Nullable error) {
+- (void)fetchAllContactsHandler:(void(^)(BOOL granted, NSArray *contacts, NSError *error))completion {
+    if (!completion) {
+        return;
+    }
+    [self requestPermission:^(BOOL granted, NSError *error) {
         if (granted) {
             NSMutableArray *contacts = [[NSMutableArray alloc] init];
             NSArray *keys = @[CNContactGivenNameKey, CNContactFamilyNameKey, CNContactMiddleNameKey,
@@ -73,24 +98,17 @@
             NSArray *cnContacts = [self.store unifiedContactsMatchingPredicate:predicate keysToFetch:keys error:&error];
             
             for (CNContact *contact in cnContacts) {
-                @try
-                {
-                    NSMutableArray *phones = [[NSMutableArray alloc] init];
-                    for (CNLabeledValue *phone in contact.phoneNumbers) {
-                        [phones addObject:[phone.value stringValue]];
-                    }
-                    ContactEntity *newContact = [[ContactEntity alloc] initWithIdentifier:contact.identifier
-                                                                                firstName:contact.givenName
-                                                                               middleName:contact.middleName
-                                                                                 lastName:contact.familyName
-                                                                                   phones:phones
-                                                                         isAvailableImage:contact.imageDataAvailable];
-                    [contacts addObject:newContact];
+                NSMutableArray *phones = [[NSMutableArray alloc] init];
+                for (CNLabeledValue *phone in contact.phoneNumbers) {
+                    [phones addObject:[phone.value stringValue]];
                 }
-                @catch (NSException *exception)
-                {
-                    NSLog(@"EXCEPTION IN CONTACTS : %@", exception.description);
-                }
+                ContactEntity *newContact = [[ContactEntity alloc] initWithIdentifier:contact.identifier
+                                                                            firstName:contact.givenName
+                                                                           middleName:contact.middleName
+                                                                             lastName:contact.familyName
+                                                                               phones:phones
+                                                                     isAvailableImage:contact.imageDataAvailable];
+                [contacts addObject:newContact];
             }
             completion(YES, contacts, error);
         } else {
@@ -100,6 +118,13 @@
 }
 
 - (void)getThumbnailImageDataWithIdentifier:(NSString *)identifier completion:(void (^)(NSData *thumbnailData, NSError * error))completion {
+    if (!completion) {
+        return;
+    }
+    if (!identifier) {
+        NSError* error = [NSError errorWithDomain:kErrorDomain code:ZALoadImageStatusInvalidIdentifier userInfo:@{@"message": @"Invald indentifier"}];
+        completion(nil, error);
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         NSError *error;
         [self.store containersMatchingPredicate:[CNContainer predicateForContainersWithIdentifiers:@[self.store.defaultContainerIdentifier]] error:&error];

@@ -23,9 +23,12 @@ static NSCache *imageCache;
     return instance;
 }
 
-- (void)getAllContactsWithList:(void(^)(NSArray *contacts, NSError * _Nullable error))completion {
+- (void)getAllContactsWithList:(void(^)(NSArray *contacts, NSError *error))completion {
     ContactAdapter *contactAdapter = [ContactAdapter sharedInstance];
-    [contactAdapter fetchAllContactsHandler:^(BOOL granted, NSArray *contacts, NSError * _Nullable error) {
+    [contactAdapter fetchAllContactsHandler:^(BOOL granted, NSArray *contacts, NSError *error) {
+        if (!completion) {
+            return;
+        }
         if (granted) {
             if (error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -44,9 +47,12 @@ static NSCache *imageCache;
     }];
 }
 
-- (void)getAllContactsWithSection:(void(^)(NSDictionary *contacts, NSError * _Nullable error))completion {
+- (void)getAllContactsWithSection:(void(^)(NSDictionary *contacts, NSError *error))completion {
     ContactAdapter *contactAdapter = [ContactAdapter sharedInstance];
-    [contactAdapter fetchAllContactsHandler:^(BOOL granted, NSArray *contacts, NSError * _Nullable error) {
+    [contactAdapter fetchAllContactsHandler:^(BOOL granted, NSArray *contacts, NSError *error) {
+        if (!completion) {
+            return;
+        }
         NSMutableDictionary *allContacts = nil;
         if (granted) {
             allContacts = [[NSMutableDictionary alloc] init];
@@ -55,7 +61,6 @@ static NSCache *imageCache;
                     completion(nil, error);
                 });
             } else {
-                NSLog(@"Contact: %d", [contacts count]);
                 for (ContactEntity *contact in contacts) {
                     NSString *category;
                     if (contact.firstName && ![contact.firstName isEqualToString:@""]) {
@@ -91,18 +96,18 @@ static NSCache *imageCache;
         imageCache = [[NSCache alloc] init];
     }
     if ([imageCache objectForKey:identifier]) {
-        completion([imageCache objectForKey:identifier], nil);
+        completion ? completion([imageCache objectForKey:identifier], nil) : nil;
     } else {
         [[ContactAdapter sharedInstance] getThumbnailImageDataWithIdentifier:identifier completion:^(NSData *thumbnailData, NSError *error) {
             if (error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(nil, error);
+                    completion ? completion(nil, error) : nil;
                 });
             } else {
                 UIImage *image = [UIImage imageWithData:thumbnailData];
                 [imageCache setObject:image forKey:identifier];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(image, nil);
+                    completion ? completion(image, nil) : nil;
                 });
             }
         }];
